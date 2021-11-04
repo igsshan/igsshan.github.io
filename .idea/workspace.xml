@@ -5,7 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1ea28544-7ec9-4e1f-8fa9-4699b7565913" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/JVM/JVM.xmind" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/Java集合/1.List/List集合类.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/Java集合/2.Map/HashMap 解析负载因子.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/Java集合/2.Map/HashMap,HashTable,ConcurrentHashMap三者区别.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/Java集合/2.Map/HashMap.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/Java集合/2.Map/HashMap实现.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/Java集合/2.Map/HashSet和HashMap区别.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/Java集合/2.Map/Map之Hash冲突.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/Java集合/2.Map/红黑树.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/Java集合/3.Stream/java中Stream流式编程.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/操作系统/5.GIT使用/Gitlab服务端搭建.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/notes/数据库/1.MySQL/SQL查询优化.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,22 +49,79 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/notes/数据库/1.MySQL" />
     <property name="settings.editor.selected.configurable" value="MavenSettings" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\java\igsshan.github.io\notes\数据库\1.MySQL" />
+      <recent name="D:\java\igsshan.github.io\notes\JVM" />
+      <recent name="D:\java\igsshan.github.io\notes\Java集合\3.Stream" />
+      <recent name="D:\java\igsshan.github.io\notes\Java集合\2.Map" />
+      <recent name="D:\java\igsshan.github.io\notes\Java集合\1.List" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\java\igsshan.github.io\notes\1.Linux\3.fastdfs使用" />
       <recent name="D:\java\igsshan.github.io\docs" />
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="code" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="code" />
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -75,6 +143,7 @@
       <option name="presentableId" value="Default" />
       <updated>1635927218717</updated>
       <workItem from="1635927219967" duration="4246000" />
+      <workItem from="1635987160014" duration="5823000" />
     </task>
     <servers />
   </component>
@@ -94,5 +163,9 @@
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state x="-1762" y="0" key="new project wizard/0.0.1280.680/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1635931291328" />
+    <state x="-1388" y="237" key="run.anything.popup" timestamp="1635987371417">
+      <screen x="-1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="-1388" y="237" key="run.anything.popup/0.0.1280.680/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1635987371417" />
   </component>
 </project>

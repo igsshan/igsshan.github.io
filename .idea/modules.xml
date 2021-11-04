@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/code/code.iml" filepath="$PROJECT_DIR$/code/code.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/igsshan.github.io.iml" filepath="$PROJECT_DIR$/.idea/igsshan.github.io.iml" />
     </modules>
   </component>
