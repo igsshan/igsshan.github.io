@@ -1,4 +1,4 @@
-<div class="cover-main"><img width="180px" src="icon/icon.JPG">
+<div class="cover-main"><img width="180px" src="icon/icon.jpg">
 
 
 
