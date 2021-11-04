@@ -16,11 +16,11 @@
 
 
 
-[Linux](/notes/system/1.linux)
+[Linux](/docs/notes/system/1.linux)
 
-[Nginx](/notes/system/2.nginx.md)
+[Nginx](/docs/notes/system/2.nginx.md)
 
-[Docker](/notes/system/3.docker.md)
+[Docker](/docs/notes/system/3.docker.md)
 
-[FastDFS](/notes/system/4.fastdfs.md)
+[FastDFS](/docs/notes/system/4.fastdfs.md)
 
