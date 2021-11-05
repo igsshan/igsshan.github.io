@@ -1,1 +1,2 @@
-![JVM](D:\java\igsshan.github.io\docs\notes\JVM\JVM.png)
+![JVM](https://github.com/igsshan/igsshan.github.io/blob/main/docs/notes/JVM/JVM.png)
+
