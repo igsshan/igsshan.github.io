@@ -21,3 +21,6 @@
 - :floppy_disk: 数据库
   - [Mysql数据库优化方案](/notes/database/1.SQL查询优化.md)
 
+- :alarm_clock: JVM
+  - [JVM脑图](/notes/JVM/jvm.md)
+
