@@ -28,7 +28,7 @@
 
 + :alarm_clock: JVM
 
-    - [jvm](/notes/JVM/jvm.md)
+    - [JVM脑图](/notes/JVM/jvm.md)
 
       
 

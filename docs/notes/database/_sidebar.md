@@ -22,8 +22,10 @@
     - [4.Map各子类的区别](/notes/collection/HashMap,HashTable,ConcurrentHashMap三者区别.md)
     - [5.HashSet和HashMap差别](/notes/collection/HashSet和HashMap区别.md)
   
-  
 - :floppy_disk: 数据库
   
   - [Mysql数据库优化方案](/notes/database/1.SQL查询优化.md)
+
+- :alarm_clock: JVM
+  - [JVM脑图](/notes/JVM/jvm.md)
 
