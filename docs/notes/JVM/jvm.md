@@ -1,2 +1,3 @@
-![](https://github.com/igsshan/igsshan.github.io/blob/main/docs/notes/JVM/JVM.png?raw=true)
+![jvm](https://github.com/igsshan/igsshan.github.io/blob/main/JVM.png?raw=true)
 
+![哈哈哈](JVM.png)
