@@ -9,4 +9,7 @@
   - [List集合类](/notes/collection/1.list-collection.md)
   - [Stream流式编程](/notes/collection/2.java-stream.md)
   - [Map集合归纳](/notes/collection/3.map.md)
+  
 
+- :floppy_disk: 数据库
+  - [Mysql数据库优化方案](/notes/database/1.SQL查询优化.md)
