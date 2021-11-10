@@ -86,7 +86,7 @@
 
 #### 分布式的解决
 
-> SpringBoot + SpringBoot
+> SpringBoot + SpringColud
 
 ### 04.云原生
 
