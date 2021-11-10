@@ -1,5 +1,7 @@
 # Spring 注解开发
 
+### 组件注册
+
 #### @Bean注解
 
 > @Bean注解用于告诉方法，产生一个Bean对象，然后这个Bean对象交给Spring管理。
@@ -200,5 +202,162 @@ public interface Condition {
     }
     ```
 
-    
+  
+  
 
+#### FactoryBean
+
+> 使用Spring提供的FactoryBean(工厂bean)进行组件注册
+
+```java
+public interface FactoryBean<T> {
+
+    // 返回的对象实例
+	@Nullable
+	T getObject() throws Exception;
+
+    // bean的类型
+	@Nullable
+	Class<?> getObjectType();
+
+    // 是否单例,true是单例,flase是非单例.Spring5.0中此方法利用了JDK1.8的新特性变成了default方法，默认返回true
+	default boolean isSingleton() {
+		return true;
+	}
+
+}
+
+```
+
+> Demo 类
+
+```java
+public class DemoFactoryBean implements FactoryBean<User>{
+    
+    @Override
+    public User getObject() throws Exception {
+        //这个Bean是我们自己new的，这里我们就可以控制Bean的创建过程了
+        return new User();
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return User.class;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true;
+    }
+}
+```
+
+- 默认获取到的工厂bean调用getObject()创建的对象
+
+  ```java
+  Object bean = applicationContext.getBean("DemoFactoryBean")
+    //  bean的类型就是User类型
+  ```
+
+- 要获取工厂bean本身,我们需要给id前面加一个&符号: ("&DemoFactoryBean")
+
+  ```java
+  Object bean = applicationContext.getBean("&DemoFactoryBean")
+    //  bean的类型就是DemoFactoryBean
+  ```
+
+### 生命周期
+
+> Bean的生命周期:
+>
+> ​	bean创建 ---> 初始化 ---> 销毁的过程
+>
+> 容器管理bean的生命周期
+>
+> bean的初始化和销毁的方法,我们可以自定义,容器在bean进行到当前生命周期的时候来调用我们自定义的初始化和销毁的方法
+
+- 指定bean初始化和销毁的方法
+
+  - 通过@Bean指定 initMethod() 和 destroyMethod() 来自定义bean的初始化和销毁
+
+  ```java
+  @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+  @Retention(RetentionPolicy.RUNTIME)
+  @Documented
+  public @interface Bean {
+  
+      String initMethod() default "";
+  
+      String destroyMethod() default "(inferred)";
+  }
+  ```
+
+  ```java
+  容器启动的时候(流程)
+  	1.构造( 对象创建 )
+  		单实例,在容器启动的时候就创建对象
+  		多实例,在每次获取对象的时候创建对象
+  
+  	2.BeanPostProcessor.postProcessBeforeInitialization
+  	
+  	3.初始化
+  		对象创建完成,并赋值好,调用初始化方法.
+      
+      4.BeanPostProcessor.postProcessAfterInitialization
+  
+  	5.销毁
+  		单实例: 容器关闭的时候调用销毁的方法
+  		多实例: 容器不会管理这个Bean,只负责创建,不负责销毁
+  		
+  // 自定义控制Bean生命周期的初始化和销毁,可以在上面的流程中对其进行控制
+  ```
+
+  
+
+- 通过让Bean实现 InitializingBean 接口实现初始化逻辑,实现 DisposableBean 接口实现销毁逻辑
+
+  ```java
+  public interface InitializingBean {
+  
+  	// 此方法允许 bean 实例在设置所有 bean 属性后执行其整体配置和最终初始化的验证。
+  	void afterPropertiesSet() throws Exception;
+  
+  }
+  ```
+
+  ```java
+  public interface DisposableBean {
+  	
+      // 销毁的方法
+  	void destroy() throws Exception;
+  
+  }
+  ```
+
+- 使用JSR250Java标准规范中的注解自定义对象的初始化和销毁
+  - 使用@PostConstruct注解,标注在自定的初始化方法上,意思是:在Bean创建完成并且属性赋值完成(对象构造完成之后调用),在执行这个方法
+  - 使用@PreDestory注解,标注在自定义的销毁方法上,意思是:容器移除之前调用
+
+- 实现 BeanPostProcessor 接口 (Bean的后置处理器)
+
+  > 在bean初始化前后进行一些处理工作
+
+  ```java
+  public interface BeanPostProcessor {
+  
+      // 在初始化之前工作
+  	@Nullable
+  	default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+  		return bean;
+  	}
+  
+      // 在初始化之后工作
+  	@Nullable
+  	default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+  		return bean;
+  	}
+  
+  }
+  ```
+
+  
