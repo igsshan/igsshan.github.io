@@ -63,6 +63,18 @@ public class BeanConfig {
 }
 ```
 
+
+
+#### @Component
+
+> 作用就是实现bean的注入
+>
+> @Repository(“名称”)：dao层
+> @Service(“名称”)：service层
+> @Controller(“名称”)：web层
+
+
+
 #### @Scope
 
 > @Scope注解是springIoc容器中的一个作用域
@@ -77,6 +89,8 @@ public class BeanConfig {
 
 当然,singleton虽然保证了全局是一个实例,对性能有所提高,但是如果实例中有非静态实例变量时,会导致线程安全问题,共享资源的竞争; 当设置为prototype时,每次连接请求,都会生成一个bean实例,也会导致一个问题,就是请求数越多,性能会降低,频繁创建实例,导致GC频繁,GC时长增加
 
+
+
 #### @Lazy
 
 > 单实例bean,默认在容器启动的时候创建对象
@@ -87,6 +101,8 @@ public class BeanConfig {
 @Lazy 的value 取值有 true 和 false 两个 默认值为 true
 true 表示使用 延迟加载， false 表示不使用，false 纯属多余，如果不使用，不标注该注解就可以了。
 ```
+
+
 
 #### @Conditional
 
@@ -138,6 +154,8 @@ public interface Condition {
 > 标注在类上,满足当前条件,这个类中配置的所有bean才会生效
 >
 > 多条件配置,当所有条件成立,返回true,被该注解标注的方法或者类才会生效
+
+
 
 #### @Import
 
@@ -276,6 +294,8 @@ public class DemoFactoryBean implements FactoryBean<User>{
 >
 > bean的初始化和销毁的方法,我们可以自定义,容器在bean进行到当前生命周期的时候来调用我们自定义的初始化和销毁的方法
 
+#### Spring注解开发管理bean的初始化和销毁
+
 - 指定bean初始化和销毁的方法
 
   - 通过@Bean指定 initMethod() 和 destroyMethod() 来自定义bean的初始化和销毁
@@ -338,6 +358,8 @@ public class DemoFactoryBean implements FactoryBean<User>{
   - 使用@PostConstruct注解,标注在自定的初始化方法上,意思是:在Bean创建完成并且属性赋值完成(对象构造完成之后调用),在执行这个方法
   - 使用@PreDestory注解,标注在自定义的销毁方法上,意思是:容器移除之前调用
 
+  
+  
 - 实现 BeanPostProcessor 接口 (Bean的后置处理器)
 
   > 在bean初始化前后进行一些处理工作
@@ -345,19 +367,27 @@ public class DemoFactoryBean implements FactoryBean<User>{
   ```java
   public interface BeanPostProcessor {
   
-      // 在初始化之前工作
+      /**
+       * 在bean初始化之前被调用
+       * 
+       * Object bean : 要被创建的实例
+       * String beanName : 实例在容器中的名字
+       * @return Object : 可以直接返回bean实例,也可以包装之后返回(必须返回,且不能为null,否则都抛出	   * 					空指针异常
+       */
   	@Nullable
   	default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
   		return bean;
   	}
   
-      // 在初始化之后工作
+      // 在bean初始化之后被调用
   	@Nullable
   	default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
   		return bean;
   	}
   
   }
+  // 注意:接口中两个方法不能返回null，如果返回null那么在后续初始化方法将报空指针异常或者通过getBean()方法获取不到bena实例对象
   ```
-
   
+  
+- BeanPostProcessor 实现原理
