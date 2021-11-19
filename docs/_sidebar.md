@@ -21,6 +21,7 @@
     - [3.HashMap解析负载因子](/notes/collection/HashMap解析负载因子.md)
     - [4.Map各子类的区别](/notes/collection/HashMap,HashTable,ConcurrentHashMap三者区别.md)
     - [5.HashSet和HashMap差别](/notes/collection/HashSet和HashMap区别.md)
+    - [6.ConcurrentHashMap的使用](/notes/collection/ConcurrentHashMap使用.md)
   
 - :floppy_disk: 数据库
   
