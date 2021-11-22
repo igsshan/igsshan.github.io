@@ -8,10 +8,13 @@
 - :coffee:  java
 
   - [List集合类](/notes/1.list-collection.md)
+  
   - [Stream流式编程](/notes/2.java-stream.md)
   
   - [Map集合归纳](/notes/3.map.md)
-  - [0.了解红黑树](/notes/红黑树.md)
+  
+    - [0.了解红黑树](/notes/红黑树.md)
+  
     - [1.HashMap的使用](/notes/4.hashmap.md)
     - [2.Map之Hash冲突](/notes/Map之Hash冲突.md)
     - [3.HashMap解析负载因子](/notes/HashMap解析负载因子.md)
