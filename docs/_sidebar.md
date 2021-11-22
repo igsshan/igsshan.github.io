@@ -8,18 +8,15 @@
 - :coffee:  java
 
   - [List集合类](/notes/1.list-collection.md)
-
-  - [Stream流式编程](/notes/2.java-stream.md)
-
+- [Stream流式编程](/notes/2.java-stream.md)
   - [Map集合归纳](/notes/3.map.md)
-- [0.了解红黑树](/notes/红黑树.md)
+  - [0.了解红黑树](/notes/红黑树.md)
     - [1.HashMap的使用](/notes/4.hashmap.md)
     - [2.Map之Hash冲突](/notes/Map之Hash冲突.md)
     - [3.HashMap解析负载因子](/notes/HashMap解析负载因子.md)
     - [4.Map各子类的区别](/notes/HashMap,HashTable,ConcurrentHashMap三者区别.md)
     - [5.HashSet和HashMap差别](/notes/HashSet和HashMap区别.md)
     - [6.ConcurrentHashMap的使用](/notes/ConcurrentHashMap使用.md)
-  
 - :floppy_disk: 数据库
   
   - [Mysql数据库优化方案](/notes/1.SQL查询优化.md)
