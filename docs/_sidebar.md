@@ -24,6 +24,7 @@
 - :floppy_disk: 数据库
   
   - [Mysql数据库优化方案](/notes/1.SQL查询优化.md)
+  - [MySql执行语句](/notes/Mysql执行流程.md)
 
 + :alarm_clock: JVM
 
@@ -31,4 +32,7 @@
 + :seedling:Spring
     - [Spring注解开发](/notes/Spring注解开发.md)
     - [SpringBoot2.0核心技术](/notes/SpringBoot2.0核心技术.md)
++ :baby_chick:整合技术
+    - [SpringBoot整合Knife4j](/notes/Knife4j在线接口调试.md)
+    - [bootstrap学习](/notes/bootstrap学习.md)
 
