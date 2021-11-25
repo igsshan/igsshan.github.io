@@ -1,7 +1,6 @@
 
 
 - :computer: Java虚拟机
-
   - [Linux常用命令解析](/notes/1.linux)
   
   - [Nginx配置](/notes/2.nginx.md)
@@ -11,7 +10,6 @@
   - [FastDFS安装以及配置](/notes/4.fastdfs.md)
   
 - :coffee:  java
-
   - [List集合类](/notes/1.list-collection.md)
   
   - [Stream流式编程](/notes/2.java-stream.md)
@@ -33,23 +31,19 @@
     - [6.ConcurrentHashMap的使用](/notes/ConcurrentHashMap使用.md)
     
 - :floppy_disk: 数据库
-  
   - [Mysql数据库优化方案](/notes/1.SQL查询优化.md)
   
   - [MySql执行语句](/notes/Mysql执行流程.md)
 
 + :alarm_clock: JVM
-
     - [JVM脑图](/notes/jvm.md)
     
 + :seedling:Spring
-
     - [Spring注解开发](/notes/Spring注解开发.md)
     
     - [SpringBoot2.0核心技术](/notes/SpringBoot2.0核心技术.md)
     
 + :baby_chick:整合技术
-
     - [SpringBoot整合Knife4j](/notes/Knife4j在线接口调试.md)
     
     - [bootstrap学习](/notes/bootstrap学习.md)
