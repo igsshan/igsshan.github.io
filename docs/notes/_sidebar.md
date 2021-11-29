@@ -35,6 +35,7 @@
     - [Spring注解开发](/notes/Spring注解开发.md)
     - [SpringBoot2.0核心技术](/notes/SpringBoot2.0核心技术.md)
     - [SpringBoot发送HTTP请求](/notes/SpringBoot发送HTTP请求.md)
+    - [SpringBoot之@Validated注解](/notes/SpringBoot之@Validated注解.md)
     
 - :baby_chick:整合技术
   - [SpringBoot整合Knife4j](/notes/Knife4j在线接口调试.md)
