@@ -1,6 +1,6 @@
 # Java反射机制
 
-> Java反射获取对象的三种方法
+> #### Java反射获取对象的三种方法
 
 - Object--> getClass();
 - 任何数据类型(包括基本数据类型)都有一个'`静态`'的class属性
@@ -205,6 +205,23 @@ public static void main(String[] args) {
 }
 ```
 
-注意
+注意 :  在运行期间,一个类只生成一个class对象
 
-- 在运行期间,一个类只生成一个class对象
+> #### 反射处理运行型注解
+
+- 判断注解是否存在`Class类`、`Field类`、`Method类`、`Constructor类`
+
+  - Class.isAnnotationPresent(Class)
+  - Field.isAnnotationPresent(Class)
+  - Method.isAnnotationPresent(Class)
+
+  - Constructor.isAnnotationPresent(Class)
+
+- 读取注解
+
+  - Class.getAnnotation(Class)
+  - Field.getAnnotation(Class)
+  - Method.getAnnotation(Class)
+  - Constructor.getAnnotation(Class)
+
+注意:  注解也是一种`类Class`,所有注解均继承自`java.lang.annotation.Annotation`,因此可以使用反射
