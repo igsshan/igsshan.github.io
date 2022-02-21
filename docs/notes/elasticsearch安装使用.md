@@ -569,5 +569,23 @@ POST _analyze
 # 测试完成即可	
 ```
 
+## SpringBoot整合ElasticSearch
 
+> boot项目整合es使用,可以使用elasticsearch-rest-high-level-client更加方便
+>
+> 也可以使用httpClient或者restTemplate,过程比较复杂,不推荐
+
+```xml
+// 引入依赖
+<dependency>
+    <groupId>org.elasticsearch.client</groupId>
+    <artifactId>elasticsearch-rest-high-level-client</artifactId>                           <version>7.4.2</version>    // version版本号(7.4.2)必须跟安装的es服务版本对应
+</dependency>
+
+// 查看java服务中mvn厂库中elasticsearch的版本号,如果不与依赖版本匹配,需要手动修改
+<elasticsearch.version>7.4.2</elasticsearch.version>
+```
+
+- 详细使用也可以访问官网
+  - https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.4/java-rest-high.html
 
