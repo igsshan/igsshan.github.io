@@ -1,5 +1,11 @@
 # elasticsearch 安装使用
 
+[TOC]
+
+> 官方文档
+>
+> https://www.elastic.co/guide/en/elasticsearch/reference/7.5/index.html
+
 ## docker 安装 elasticsearch
 
 > 拉取镜像
@@ -325,4 +331,243 @@ GET bank/_search
 # "address": "mill"  address = mill  是字符串类型,查询就是全文检索(相当于模糊查询)
 # 最终查询出 address 中包含 mill 或者 road 或者 mill road 的所有记录，并给出相关性得分
 ```
+
+### match_phrase【短语匹配】
+
+- 将需要匹配的值当成一个整体单词（不分词）进行检索
+
+```sh
+GET bank/_search 
+{ 
+	"query": { 
+		"match_phrase": { 
+			"address": "mill road" 
+		} 
+	} 
+}
+
+# 查出 address 中包含 mill road 的所有记录，并给出相关性得分
+```
+
+### multi_match【多字段匹配】
+
+- 多字段匹配
+
+```sh
+GET bank/_search 
+{ 
+	"query": { 
+		"multi_match": { 
+			"query": "mill", 
+			"fields": ["state","address"] 
+		} 
+	} 
+}
+
+# "query" 指定查询的内容
+# "fields" 指定查询的字段(多个)
+# state 或者 address 包含 mill
+```
+
+### bool【复合查询】
+
+- bool 用来做复合查询： 复合语句可以合并 任何 其它查询语句，包括复合语句，了解这一点是很重要的。这就意味着，复合语句之间可以互相嵌套，可以表达非常复杂的逻辑。
+
+```sh
+# must：必须达到 must 列举的所有条件
+
+GET bank/_search 
+{ 
+	"query": { 
+		"bool": { 
+			"must": [ 
+				{ "match": { 
+					"address": "mill" 
+					} 
+				},
+				{ "match": { 
+					"gender": "M" 
+					} 
+				}
+			] 
+		} 
+	} 
+}
+
+```
+
+```sh
+# must_not: 必须不满足 must_not 列举的条件
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "age": "40" } }
+      ],
+      "must_not": [
+        { "match": { "state": "ID" } }
+      ]
+    }
+  }
+}
+```
+
+```sh
+# should：应该达到 should 列举的条件，如果达到会增加相关文档的评分，并不会改变 查询的结果。如果 query 中只有 should 且只有一种匹配规则，那么 should 的条件就会 被作为默认匹配条件而去改变查询结果
+
+GET bank/_search 
+{ 
+	"query": { 
+		"bool": { 
+			"must": [ 
+				{ "match": { "address": "mill" } },
+                { "match": { "gender": "M" } } 
+             ],
+             "should": [ 
+             	{"match": { "address": "lane" }} 
+             ] 
+          } 
+     } 
+ }
+```
+
+### filter【结果过滤】
+
+- 并不是所有的查询都需要产生分数，特别是那些仅用于 “filtering”（过滤）的文档。为了不 
+
+  计算分数 Elasticsearch 会自动检查场景并且优化查询的执行。 
+
+### term
+
+- 和 match 一样。匹配某个属性的值。全文检索字段用 match，其他非 text 字段匹配用 term。
+
+## mapping 映射
+
+- Mapping 是用来定义一个文档（document），以及它所包含的属性（field）是如何存储和 索引的
+
+> 查看 mapping 信息：
+
+```sh
+GET bank/_mapping
+```
+
+> 创建映射 
+
+```sh
+PUT /my-index 
+{ 
+	"mappings": { 
+		"properties": {
+			"age": { "type": "integer" }, 
+			"email": { "type": "keyword" }, 
+			"name": { "type": "text" } 
+		} 
+	} 
+}
+# 创建新的索引并指定映射
+```
+
+> 添加新的字段映射
+
+```sh
+PUT /my-index/_mapping 
+{ 
+	"properties": { 
+		"employee-id": { 
+			"type": "keyword", 
+			"index": false 
+		} 
+	} 
+}
+# 只能用于添加新的字段映射
+# "index": false ;默认为true,是用来控制标识的字段是否用来被检索
+```
+
+>  对于已经存在的映射字段，我们不能更新。更新必须创建新的索引进行数据迁移 
+
+> 数据迁移
+
+```sh
+# 迁移数据之前,需要先建立一个新的索引
+POST _reindex 
+{ 
+ "source": {
+   "index": "twitter", 
+   "type": "tweet" 
+   },
+   "dest": { 
+     "index": "tweets" 
+   } 
+}
+# "index": "twitter" ;旧的数据索引
+# "index": "tweets" ;新建的索引
+```
+
+## 分词
+
+> 一个 tokenizer（分词器）接收一个字符流，将之分割为独立的 tokens（词元，通常是独立的单词），然后输出 tokens 流。
+
+- 安装 ik 分词器
+
+  - 下载安装包
+
+    ```sh
+    wget https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.4.2/elasticsearch-analysis-ik-7.4.2.zip
+    ```
+
+  - 解压 安装
+
+    ```sh
+    # 解压
+    unzip 压缩包
+    
+    # 删除压缩包
+    rm -rf *.zip
+    
+    # 验证安装是否成功(进入文件内部,在 bin文件夹下 elasticsearch-plugin)
+    elasticsearch-plugin list
+    
+    # 重启服务
+    docker restart elasticsearch
+    ```
+
+> 使用 ik 分词器
+
+```sh
+# "analyzer": "ik_smart"
+
+POST _analyze
+{
+  "analyzer": "ik_smart", 
+  "text": "中国冬奥会圆满完成呢"
+}
+```
+
+```sh
+# "analyzer": "ik_max_word"
+
+POST _analyze
+{
+  "analyzer": "ik_max_word", 
+  "text": "中国冬奥会圆满完成呢"
+}
+```
+
+> 自定义分词词库
+
+```sh
+- 挂载本机的nginx配置,配置自定义分词器
+# 1.启动好一个独立的nginx服务,并在其html文件夹下创建一个独立文件夹,保存自定义的分词文本信息
+
+# 2.进入到elasticsearch服务挂载的本地plugin文件夹下config文件夹
+# 3.修改IKAnalyzer.cfg.xml文件
+<!--用户可以在这里配置远程扩展字典 -->
+<entry key="remote_ext_dict">http://192.168.56.101/ik/fenci.txt</entry> # 注意路径修改为自己当前nginx服务创建的分词文件路径
+
+# 测试完成即可	
+```
+
+
 
