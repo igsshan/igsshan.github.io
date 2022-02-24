@@ -39,6 +39,6 @@
   - [SpringBoot整合Knife4j](/notes/Knife4j在线接口调试.md)
   - [bootstrap学习](/notes/bootstrap学习.md)
   - [Java反射机制](/notes/Java反射机制.md)
-
   - [ElasticSearch入门](/notes/elasticsearch安装使用.md)
-
+- :closed_lock_with_key:项目实战
+  - [Nginx实战](/notes/Nginx实战.md)
