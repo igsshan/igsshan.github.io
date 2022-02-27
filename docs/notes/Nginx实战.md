@@ -89,3 +89,23 @@
   ```sh
   docker restart nginx
   ```
+
+
+
+## Nginx实现动静分离(Nginx加载静态资源包括js,css等)
+
+> nginx配置加载静态资源 css/js 样式
+
+- 首先,将静态资源等文件,在外部挂载的/nginx/html 文件夹下创建一个static文件夹,存储静态资源文件
+
+- 修改nginx配置
+
+  ```
+  location /static/{
+      root /user/share/nginx/html;
+  }
+  ```
+
+- 配置首页index.html资源请求路径
+
+- 重启 nginx 服务

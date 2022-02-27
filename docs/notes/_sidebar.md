@@ -42,3 +42,6 @@
   - [ElasticSearch入门](/notes/elasticsearch安装使用.md)
 - :closed_lock_with_key:项目实战
   - [Nginx实战](/notes/Nginx实战.md)
+  - [Redis实战](/notes/Redis实战.md)
+  - [JMeter实战](/notes/性能监控与压力测试.md)
+
