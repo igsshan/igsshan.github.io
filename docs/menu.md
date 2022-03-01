@@ -41,4 +41,5 @@
     - [Nginx实战](/notes/Nginx实战.md)
     - [Redis实战](/notes/Redis实战.md)
     - [JMeter实战](/notes/性能监控与压力测试.md)
+    - [SpringCache实战](/notes/SpringCache实战.md)
 
