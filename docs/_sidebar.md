@@ -50,4 +50,6 @@
     - [Redis实战](/notes/Redis实战.md)
     - [JMeter实战](/notes/性能监控与压力测试.md)
     - [SpringCache实战](/notes/SpringCache实战.md)
+    - [SpringSession入门](/notes/分布式session解决方案.md)
+    - [线程池入门](/notes/异步与线程池.md)
 

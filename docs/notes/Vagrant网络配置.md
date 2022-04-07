@@ -51,3 +51,45 @@ yum install -y wget
 # -y 就是全是确认
 ```
 
+## vagrantbox安装centos7镜像,配置虚拟网络
+
+### virtualbox下载源
+
+> https://www.virtualbox.org/wiki/Downloads
+
+### centos7下载源
+
+> linux源: http://isoredirect.centos.org/centos/7/isos/x86_64/
+>
+> 阿里服务源: http://mirrors.aliyun.com/centos/7/isos/x86_64/
+
+### 安装centos7
+
+- 配置网络
+
+  - ##### 配置NAT网络
+
+    ```sh
+    cd /etc/sysconfig/network-scripts/
+    vi ifcfg-enp0s3
+    # 将ONBOOT=no改为yes，再添加BOOTPROTO=dhcp(没有该项的话)，
+    
+    # 保存退出，重启网络
+    service network restart
+    #ping百度
+    ping www.baidu.com
+    
+    ```
+
+  - ##### 配置host-only网络
+
+    ```sh
+    vi ifcfg-enp0s8
+    #修改BOOTPROTO=static,ONBOOT=yes.
+    #添加NETMASK=255.255.255.0。
+    #修改HWADR为host-only网卡的MAC地址。
+    #添加IPADDR，（192.168.56.x）x可以自己指定，用于主机连接虚拟机使用。
+    #修改UUID（只要不和一张网卡一样就行）。
+    service network restart
+    
+    ```
