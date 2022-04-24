@@ -44,4 +44,6 @@
     - [SpringCache实战](/notes/SpringCache实战.md)
     - [SpringSession入门](/notes/分布式session解决方案.md)
     - [线程池入门](/notes/异步与线程池.md)
+    - [RabbitMQ入门](/notes/SpringBoot整合RabbitMQ.md)
+    - [Java数据结构](/notes/Java数据结构.md)
 
