@@ -1,5 +1,75 @@
 # Nginx实战
 
+## linux下以jar包安装nginx
+
+```sh
+# 安装之前检查是否有安装过
+nginx find-name nginx 1
+```
+
+```sh
+## 下载安装包(最好在自己自定义的文件夹下下载压缩包)
+wget http://nginx.org/download/nginx-1.20.2.tar.gz
+```
+
+```sh
+## 安装nginx所有依赖
+yum -y install gcc pcre-devel zlib-devel openssl openssl-devel
+```
+
+```sh
+## 安装nginx
+#解压
+tar -zxvf nginx-1.20.2.tar.gz
+
+#进入NG目录
+cd ./nginx-1.20.2
+
+#配置
+./configure --prefix=/usr/local/nginx
+
+#编译
+make
+make install
+```
+
+```sh
+#启动
+/usr/local/nginx/sbin/nginx
+
+#重新加载配置
+/usr/local/nginx/sbin/nginx -s reload
+
+#停止
+/usr/local/nginx/sbin/nginx -s stop
+
+```
+
+## linux下以docker方式安装nginx
+
+```sh
+## 下载镜像
+docker pull redis #下载最新 redis => redis:latest
+docker pull redis:6.2.4 # 下载指定版本
+```
+
+```sh
+## 启动镜像
+docker run --name=mynginx \
+-d --restart=always \
+-p 88:80 \
+-v /data/html:/usr/share/nginx/html:ro \
+nginx
+
+# -v 挂载外部数据,修改页面只需要在主机的 /data/html下即可
+# ro :只读
+# rw :读写
+```
+
+
+
+
+
 ## Nginx搭建域名访问(反向代理配置)
 
 > nginx官网
@@ -109,3 +179,4 @@
 - 配置首页index.html资源请求路径
 
 - 重启 nginx 服务
+
