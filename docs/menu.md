@@ -46,4 +46,5 @@
     - [线程池入门](/notes/异步与线程池.md)
     - [RabbitMQ入门](/notes/SpringBoot整合RabbitMQ.md)
     - [Java数据结构](/notes/Java数据结构.md)
+    - [分布式事务管理](/notes/分布式事务管理.md)
 
