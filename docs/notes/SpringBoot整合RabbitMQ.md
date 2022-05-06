@@ -385,3 +385,126 @@ public class MyRabbitConfig {
     }
 ```
 
+## RabbitMQ延时队列
+
+### 消息的TTL (time to live)
+
+- 消息的TTL 就是消息的存活时间
+
+- RabbitMQ 可以对队列和消息分别设置 TTL
+
+  - 对队列设置就是队列没有消费者连着的保留时间,也可以对每一个单独的消息做单独设置,超过了这个时间,我们就认为这个消息死了,称之为`死信`
+  - 如果队列设置了 TTL,消息也设置了,那么会`取小的`.所以一个消息如果被路由到不同的队列中,这个消息死亡的时间有可能不一样(不同的队列设置).这里单讲单个消息的TTL,因为他才是实现延时任务的关键.可以通过`设置消息的expiration字段或者x-message-ttl属性来设置时间`两者都是一样的效果
+
+
+### 死信 Dead Letter Exchanges (DLX)
+
+- 一个消息在满足如下条件下,会进`死信路由`,这里是`路由`而不是`队列`,一个路由可以对应很多队列
+  - 一个消息被consumer拒收了,并且reject方法的参数里requeue是false,也就是说不会再次放进队列里,被其他消费者使用.(basic.reject / basic.nack) requeue = false
+  - 上面的消息的TTL 到期了,消息过期了
+  - 队列的长度限制满了,排在前面的消息会被丢弃或者扔到死信路由上
+- Dead Letter Exchange 其实就是一种普通exchange,和创建其他exchange没有两样.只是在某一个设置 dead letter exchange队列中有消息过期了,会自动触发消息的转发,发送到dead letter exchange中去
+- 我们既可以控制消息在一段时间后变成死信,又可以控制变成死信的消息被路由到某一个指定的交换机,结合二者,其实就可以实现一个延时队列
+
+### 延时队列的实现-1
+
+> 设置队列过期时间实现延时队列
+
+- 生产者 --- > (routing - key deal message) --> 交换机 (exchange) -- >发送到队列
+- 队列设置了死信路由交换机,设置了过期时间,路由的键 (x-dead-letter-exchange delay exchange  ,x-dead-letter-routing-key  delay message , x-message-ttl  60000) ---> 到期的消息被转发到死信交换机---->(delay exchange) --->再根据路由键发送到死信队列 ---( routing -key  delay message) ---> test queue ---> consumer 消费
+
+### 延时队列的实现-2
+
+> 设置消息过期时间实现延时队列 ---->不太推荐,由于消息队列是懒加载的.不太适合,推荐方式1
+
+
+
+### 延时队列的实现 demo
+
+> 创建队列
+
+```java
+// 项目启动队列创建好了之后,即使属性发生了变化,queue也不会改变,只有重新删除在重新启动就可以
+
+@Configuration
+public class MyRabbitConfig {
+
+    /**
+     * 使用 Bean注入的方式 创建 Queue , Exchange ,Banding
+     * 没有就会创建
+     */
+    @Bean
+    public Queue orderDelayQueue() {
+
+        // String name, boolean durable, boolean exclusive, boolean autoDelete,@Nullable Map<String, Object> arguments
+
+        Map<String, Object> arguments = new HashMap<>(0);
+        // 死信路由
+        arguments.put("x-dead-letter-exchange", "order-event-exchange");
+        // 路由键
+        arguments.put("x-dead-letter-routing-key", "order.release.order");
+        // 过期时间(毫秒)
+        arguments.put("x-message-ttl", 120000);
+
+        return new Queue("order.delay.queue", true, false, false, arguments);
+    }
+
+    @Bean
+    public Queue orderReleaseOrderQueue() {
+
+        return new Queue("order.release.order.queue", true, false, false);
+    }
+
+
+    @Bean
+    public Exchange orderEventExchange() {
+
+        return new TopicExchange("order-event-exchange", true, false);
+    }
+
+    @Bean
+    public Binding orderCreateOrderBinding() {
+
+        /**
+         *                  目的地               目的地的类型                     哪个交换机跟目的地绑定  路由键            是否有其他参数属性
+         *  public Binding(String destination, DestinationType destinationType, String exchange, String routingKey, @Nullable Map<String, Object> arguments) {
+         */
+        return new Binding("order.delay.queue", Binding.DestinationType.QUEUE, "order-event-exchange", "order.create.order", null);
+    }
+
+    @Bean
+    public Binding orderReleaseOrderBinding() {
+
+        return new Binding("order.release.order.queue", Binding.DestinationType.QUEUE, "order-event-exchange", "order.release.order", null);
+    }
+}
+```
+
+> 消费者监听队列,接收消息
+
+```java
+@slf4j
+@Service
+public class Test{
+    
+    @RabbitListener(queues = {"order.release.order.queue"})
+    public void receiveMessage(Entity entity, Channel channel, Message message) throws IOException {
+        log.info("---------- 接收到Entity的消息------------ {}", JSON.toJSONString(entity));
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
+    }
+}
+```
+
+> 测试发送消息
+
+```java
+@Test
+void testSendMessage() {
+        Entity entity = new Entity();
+        entity.setId(UUID.randomUUID().toString().replace("-", ""));
+        entity.setCreateTime(new Date());
+        log.info("---------- 发送的消息内容是------------ {}", JSON.toJSONString(entity));
+        rabbitTemplate.convertAndSend("test-event-exchange", "test.create.message", entity);
+    }
+```
+
