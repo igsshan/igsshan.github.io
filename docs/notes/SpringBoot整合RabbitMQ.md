@@ -508,3 +508,140 @@ void testSendMessage() {
     }
 ```
 
+## 消息的积压,重复,丢失等解决方案
+
+### 消息丢失
+
+- 消息发送出去,由于网络问题,没有抵达服务器
+
+  - 做好容错方法(try-catch),发送消息可能会网络失败,失败后要有重试机制,可记录到数据库,采用定时扫描失败消息重新发送
+  - 做好日志记录,每个消息的状态是否被服务器收到都要做好记录
+  - 做好定期重发,如果消息没有发送成功,定期去数据库查询发送失败的消息进行重发
+
+  > ```sql
+  > DROP TABLE IF EXISTS `mq_message`;
+  > CREATE TABLE `mq_message`  (
+  >   `message_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '消息id',
+  >   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '消息的内容',
+  >   `to_exchange` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '交换机',
+  >   `routing_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '路由键',
+  >   `class_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '数据类型',
+  >   `message_status` int(2) NOT NULL COMMENT '0-新建/1-已发送/2-错误抵达/3-已抵达',
+  >   `create_time` datetime(0) NULL DEFAULT NULL,
+  >   `update_time` datetime(0) NULL DEFAULT NULL,
+  >   PRIMARY KEY (`message_id`) USING BTREE
+  > ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  > 
+  > SET FOREIGN_KEY_CHECKS = 1;
+  > ```
+
+- 消息抵达Broker,Broker要将消息写入磁盘(持久化)才算成功,此时Broker尚未完成持久化,宕机
+
+  - publisher也必须加入确认回调机制,确认消息成功,修改数据库状态
+
+  ```java
+  @Configuration
+  public class MyRabbirConfig{
+      /**
+       * 被@PostConstruct修饰的方法会在服务器加载Servlet的时候运行，并且只会被服务器执行一次。PostConstruct在构造函数之后执行，init（）方法之前执行。
+       * <p>
+       * 通常我们会是在Spring框架中使用到@PostConstruct注解 该注解的方法在整个Bean初始化中的执行顺序：
+       * <p>
+       * Constructor(构造方法) -> @Autowired(依赖注入) -> @PostConstruct(注释的方法)
+       * <p>
+       * 应用：在静态方法中调用依赖注入的Bean中的方法。
+       */
+      @PostConstruct
+      public void initRabbitTemplate() {
+          /*
+            消息发送确认回调
+           */
+          rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
+              /**
+               *
+               * @param correlationData 当前消息的唯一关联数据，每一个消息发送的时候可以给一个唯一id
+               * @param ack     消息是否成功收到
+               * @param cause   失败原因
+               */
+              @Override
+              public void confirm(CorrelationData correlationData, boolean ack, String cause) {
+                  // TODO 服务器收到了,记录到数据库,保存好状态
+                  System.out.println("--------消息发送成功------- correlationData=>[" + correlationData + "]==>ack=>[" + ack + "]==>cause=>[" + cause + "]");
+              }
+          });
+  
+          /*
+            消息抵达回调
+           */
+          rabbitTemplate.setReturnCallback(new RabbitTemplate.ReturnCallback() {
+              /**
+               *
+               * @param message 哪个消息投递失败了，消息的具体内容
+               * @param replyCode 回复的状态码
+               * @param replyText 回复的文本内容
+               * @param exchange 前这个消息发给哪个交换机
+               * @param routingKey 当前这个消息发送的时候，指定的哪个路由键
+               */
+              @Override
+              public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {
+                  // TODO 报错误了,修改数据库当前消息的状态-->错误.在定期扫描失败消息,重新发送
+                  System.out.println("Fail Message[" + message + "]==>replyCode[" + replyCode + "]==>replyText[" + replyText + "]==>exchange[" + exchange + "]==>routingKey[" + routingKey + "]");
+              }
+          });
+      }
+  }
+  ```
+
+- 自动ACK的状态下,消费者收到消息,还没来得及消费消息就宕机
+
+  - 一定要开启手动ACK,消费成功才移除,失败或者没来得及处理的消息就noACK,并重新入队
+
+  ```properties
+  spring:
+  	rabbitmq:
+          listener:
+            simple:
+              acknowledge-mode: manual  ## 手动确认消息
+  ```
+
+  ```java
+  @Slf4j
+  @Service
+  @RabbitListener(queues = {"order.release.order.queue"})
+  public class StockClosureListener {
+      
+      @RabbitHandler
+      public void receiveMessage(OrderEntity orderEntity, Channel channel, Message message) throws IOException {
+          
+          // 手动消费消息
+          channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+  
+          // 消息重新入队
+           channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
+      }
+  }
+  ```
+
+### 消息重复
+
+- 消息消费成功,事务已经提交,ack时候,机器宕机,导致没有ack成功,broker消息重新由unACK变成ready,并发送给其他消费者
+- 消息消费失败,由于重试机制,自动又将消息发送出去
+- 成功消费，ack时宕机，消息由unack变为ready，Broker又重新发送
+
+解决方法:
+
+- 消费者的业务消费接口应该设计成幂等性的.比如扣减库存有工作单的状态标志
+- 使用防重表(redis/mysql),发送消息每一个都有业务的唯一标志,处理过的就不用处理
+- rabbitMQ的每一个消息都有redelivered字段,可以获取是否是重新投递过来的,而不是第一次过来的消息,做一下处理
+
+### 消息积压
+
+- 消费者宕机消息积压
+- 消费者消费能力不足积压
+- 发送者发送流量太大积压
+
+解决方法:
+
+- 上线更多的消费者,进行正常消费
+- 上线专门的队列消费服务,将消息先批量取出来,记录到数据库,在慢慢进行处理
+
