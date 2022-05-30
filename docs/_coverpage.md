@@ -7,4 +7,4 @@
 
 
 
-<a href="#/menu">开始阅读</a></p></div><div class="mask"></div></section>
+<a href="#/README.md">开始阅读</a></p></div><div class="mask"></div></section>
